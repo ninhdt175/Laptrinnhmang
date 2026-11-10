@@ -6,6 +6,7 @@
 package client.view;
 
 import client.network.ClientSocketManager;
+import common.Protocol;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,18 +30,18 @@ public class ToolPanel extends JPanel {
         btnColor = new JButton("Chọn màu");
         btnColor.setBackground(Color.BLACK);
         btnColor.setForeground(Color.WHITE);
-        //btnColor.addActionListener(e -> btnColorActionPerformed(e));
+        btnColor.addActionListener(this::btnColorActionPerformed);
 
         JLabel lblSize = new JLabel("Độ dày cọ:");
         sliderSize = new JSlider(2, 20, 4);
         sliderSize.setPreferredSize(new Dimension(110, 20));
-        sliderSize.addChangeListener(e -> sliderSizeStateChanged(e));
+        sliderSize.addChangeListener(this::sliderSizeStateChanged);
 
         btnEraser = new JToggleButton("Tẩy");
-        btnEraser.addActionListener(e -> btnEraserActionPerformed(e));
+        btnEraser.addActionListener(this::btnEraserActionPerformed);
 
         btnClear = new JButton("Xóa");
-        btnClear.addActionListener(e -> btnClearActionPerformed(e));
+        btnClear.addActionListener(this::btnClearActionPerformed);
 
         add(btnColor);
         add(lblSize);
@@ -49,6 +50,16 @@ public class ToolPanel extends JPanel {
         add(btnClear);
     }
 
+    public void btnColorActionPerformed(ActionEvent evt) {
+        Color chosen = JColorChooser.showDialog(this, "Chọn màu bút vẽ", canvas.getCurrentColor());
+        if (chosen != null) {
+            canvas.setCurrentColor(chosen);
+            btnColor.setBackground(chosen);
+            int brightness = (chosen.getRed() * 299 + chosen.getGreen() * 587 + chosen.getBlue() * 114) / 1000;
+            btnColor.setForeground(brightness > 128 ? Color.BLACK : Color.WHITE);
+            btnEraser.setSelected(false);
+        }
+    }
 
     public void sliderSizeStateChanged(javax.swing.event.ChangeEvent evt) {
         canvas.setStrokeSize(sliderSize.getValue());
@@ -61,7 +72,7 @@ public class ToolPanel extends JPanel {
 
     public void btnClearActionPerformed(ActionEvent evt) {
         canvas.clearCanvas();
-        //ClientSocketManager.getInstance().sendPacket("CLEAR_CANVAS");
+        ClientSocketManager.getInstance().sendPacket(Protocol.CLEAR_CANVAS);
     }
 
     public void setToolsEnabled(boolean enabled) {

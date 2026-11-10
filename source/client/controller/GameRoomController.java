@@ -83,12 +83,11 @@ public class GameRoomController implements ServerListener {
                 }
                 break;
 
-            /*case Protocol.WORD_HINT:
+            case Protocol.WORD_HINT:
                 if (params.length >= 2) {
                     view.showWordHint(params[0], params[1]);
                 }
                 break;
-            */
             case Protocol.TIMER_TICK:
                 if (params.length >= 1) {
                     view.setTimer(parseInt(params[0], 0));
