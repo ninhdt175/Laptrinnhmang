@@ -1,6 +1,6 @@
 package client.view;
 
-import client.model.Stroke;
+import common.Stroke;
 import client.network.ClientSocketManager;
 import common.Protocol;
 import javax.swing.*;
