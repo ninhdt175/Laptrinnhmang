@@ -22,13 +22,26 @@ public class ToolPanel extends JPanel {
     private void initComponents() {
         btnColor.setBackground(Color.BLACK);
         btnColor.setForeground(Color.WHITE);
+        btnColor.setFocusPainted(false);
+        btnColor.setBorderPainted(false);
+        btnColor.setOpaque(true);
+        btnColor.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnColor.addActionListener(e -> chooseColor());
 
         sliderSize.setPreferredSize(new Dimension(130, 24));
         sliderSize.setToolTipText("Độ dày nét vẽ");
         sliderSize.addChangeListener(e -> canvas.setStrokeSize(sliderSize.getValue()));
 
+        btnEraser.setFocusPainted(false);
+        btnEraser.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnEraser.addActionListener(this::toggleEraser);
+
+        btnClear.setBackground(new Color(220, 38, 38));
+        btnClear.setForeground(Color.WHITE);
+        btnClear.setFocusPainted(false);
+        btnClear.setBorderPainted(false);
+        btnClear.setOpaque(true);
+        btnClear.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnClear.addActionListener(this::clearCanvas);
 
         add(btnColor);
@@ -44,6 +57,8 @@ public class ToolPanel extends JPanel {
             canvas.setCurrentColor(selected);
             btnColor.setBackground(selected);
             btnColor.setForeground(isDark(selected) ? Color.WHITE : Color.BLACK);
+            btnColor.setOpaque(true);
+            btnColor.setBorderPainted(false);
             btnEraser.setSelected(false);
         }
     }

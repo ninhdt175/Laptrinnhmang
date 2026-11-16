@@ -53,9 +53,18 @@ public class GameRoomView extends JFrame {
         headerRight.setBackground(new Color(23, 37, 84));
         btnStartGame.setBackground(new Color(39, 174, 96));
         btnStartGame.setForeground(Color.WHITE);
+        btnStartGame.setFocusPainted(false);
+        btnStartGame.setBorderPainted(false);
+        btnStartGame.setOpaque(true);
+        btnStartGame.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnStartGame.setVisible(false);
+
         btnLeave.setBackground(new Color(71, 85, 105));
         btnLeave.setForeground(Color.WHITE);
+        btnLeave.setFocusPainted(false);
+        btnLeave.setBorderPainted(false);
+        btnLeave.setOpaque(true);
+        btnLeave.setCursor(new Cursor(Cursor.HAND_CURSOR));
         headerRight.add(timerBar);
         headerRight.add(lblTimer);
         headerRight.add(btnStartGame);

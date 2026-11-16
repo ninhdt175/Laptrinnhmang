@@ -24,15 +24,20 @@ public class ChatBoxPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(txtChat);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         JPanel inputPanel = new JPanel(new BorderLayout(5, 0));
+        inputPanel.setPreferredSize(new Dimension(0, 34));
         txtInput = new JTextField();
         txtInput.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 
         btnSend = new JButton("Gửi");
+        btnSend.setPreferredSize(new Dimension(65, 34));
         btnSend.setBackground(new Color(41, 128, 185));
         btnSend.setForeground(Color.WHITE);
         btnSend.setFocusPainted(false);
+        btnSend.setBorderPainted(false);
+        btnSend.setOpaque(true);
+        btnSend.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        inputPanel.add(txtInput, BorderLayout.WEST);
+        inputPanel.add(txtInput, BorderLayout.CENTER);
         inputPanel.add(btnSend, BorderLayout.EAST);
         add(scrollPane, BorderLayout.CENTER);
         add(inputPanel, BorderLayout.SOUTH);
@@ -40,6 +45,7 @@ public class ChatBoxPanel extends JPanel {
 
     public void addSendListener(ActionListener listener) {
         btnSend.addActionListener(listener);
+        txtInput.addActionListener(listener);
     }
 
     public String getInputText() {
