@@ -83,12 +83,12 @@ public class GameRoomController implements ServerListener {
                 }
                 break;
 
-            /*case Protocol.WORD_HINT:
+            case Protocol.WORD_HINT:
                 if (params.length >= 2) {
                     view.showWordHint(params[0], params[1]);
                 }
                 break;
-            */
+            
             case Protocol.TIMER_TICK:
                 if (params.length >= 1) {
                     view.setTimer(parseInt(params[0], 0));
@@ -107,28 +107,28 @@ public class GameRoomController implements ServerListener {
 
             case Protocol.CHAT_MESSAGE:
                 if (params.length >= 2) {
-                    view.appendChat(params[0], params[1]);
+                    view.appendNormal(params[0], params[1]);
                 }
                 break;
 
             case Protocol.CORRECT_GUESS:
                 if (params.length >= 2) {
-                    view.appendChat("HỆ THỐNG",
+                    view.appendCorrect("HỆ THỐNG",
                             params[0] + " đoán đúng (+" + params[1] + " điểm).");
                 }
                 break;
 
             case Protocol.ROUND_END:
                 if (params.length >= 2) {
-                    view.updateLeaderboard(params[1]);
+                    view.updateScoreboard(params[1]);
                     view.showRoundEnd(params[0]);
-                    view.appendChat("HỆ THỐNG", "Kết thúc vòng. Từ khóa: " + params[0]);
+                    view.appendNormal("HỆ THỐNG", "Kết thúc vòng. Từ khóa: " + params[0]);
                 }
                 break;
 
             case Protocol.GAME_OVER:
                 if (params.length >= 2) {
-                    view.updateLeaderboard(params[1]);
+                    view.updateScoreboard(params[1]);
                     view.setGameOverState();
                     view.showMessage("Trận đấu kết thúc! Người chiến thắng: " + params[0]);
                 }
