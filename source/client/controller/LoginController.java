@@ -33,10 +33,10 @@ public class LoginController implements ServerListener {
             return;
         }
 
-        /*final String host = view.getHost();
+        final String host = view.getHost();
         final int port;
         try {
-            port = view.getPort();
+            port = Integer.parseInt(view.getPort());
             if (host.isBlank() || port < 1 || port > 65535) {
                 throw new NumberFormatException();
             }
@@ -44,15 +44,15 @@ public class LoginController implements ServerListener {
             view.showError("Địa chỉ Server hoặc cổng kết nối không hợp lệ.");
             return;
         }
-        */
+        
         view.setLoginButtonEnabled(false);
-         /*
+        
         if (!network.isConnected() && !network.connect(host, port)) {
             view.showError("Không thể kết nối Server tại " + host + ":" + port + ".");
             view.setLoginButtonEnabled(true);
             return;
         }
-        */
+        
         if (!network.sendPacket(Protocol.LOGIN, username)) {
             view.showError("Không thể gửi yêu cầu đăng nhập. Vui lòng thử lại.");
             view.setLoginButtonEnabled(true);
