@@ -44,13 +44,10 @@ Mở Terminal (Command Prompt / PowerShell trên Windows hoặc Terminal trên m
 cd source
 ```
 
-> 📌 **Lưu ý:** Bước biên dịch chỉ cần làm **1 lần duy nhất** ban đầu. Các lần sau khi không sửa đổi code, bạn có thể **bỏ qua Bước 1** và chạy thẳng luôn Bước 2 và Bước 3!
-
 ### Bước 1: Biên dịch mã nguồn (chỉ làm 1 lần)
 ```bash
 javac -encoding UTF-8 -sourcepath . server/Server.java client/ClientMain.java
 ```
-*(Trình biên dịch Java sẽ tự động tìm và biên dịch toàn bộ các lớp phụ thuộc trong hệ thống)*.
 
 ### Bước 2: Khởi chạy Máy chủ (Server)
 ```bash
