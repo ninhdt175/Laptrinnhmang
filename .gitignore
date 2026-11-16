@@ -1,0 +1,34 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+hs_err_pid*
+replay_pid*
+
+# Package & Archive Files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# NetBeans build & private configs
+/build/
+/dist/
+/nbproject/private/
+/source/dist/
+/source/nbproject/private/
+
+# IDE / Editor configuration
+.vscode/
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace
+.project
+.classpath
+.settings/
+bin/
+out/
