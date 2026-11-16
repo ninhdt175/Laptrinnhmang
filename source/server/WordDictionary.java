@@ -81,15 +81,31 @@ public class WordDictionary {
     }
 
     /**
-     * Tạo gợi ý gạch dưới hiển thị cho người đoán (ví dụ: "CON MÈO" -> "_ _ _   _ _ _")
+     * Tạo gợi ý gạch dưới ban đầu cho người đoán (ví dụ: "CON MÈO" -> "_ _ _   _ _ _")
      */
     public static String generateHint(String word) {
-        if (word == null) return "";
+        return generateHint(word, 0);
+    }
+
+    /**
+     * Tạo gợi ý hiển thị dần đáp án mỗi khi qua 60 / length(đáp án) giây cho đến hết thời gian (60s).
+     * Cứ sau mỗi mốc 60 / length(đáp án) giây, mở thêm 1 ký tự theo thứ tự từ trái qua phải.
+     */
+    public static String generateHint(String word, int elapsedSeconds) {
+        if (word == null || word.isEmpty()) return "";
+        int len = word.length();
+        if (len == 0) return "";
+
+        double interval = 60.0 / len;
+        int revealedCount = (int) (elapsedSeconds / interval);
+
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < word.length(); i++) {
+        for (int i = 0; i < len; i++) {
             char c = word.charAt(i);
             if (Character.isWhitespace(c)) {
                 sb.append("   "); // Khoảng trống giữa các từ
+            } else if (i < revealedCount) {
+                sb.append(c).append(" ");
             } else {
                 sb.append("_ ");
             }

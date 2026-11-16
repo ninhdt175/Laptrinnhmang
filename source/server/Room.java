@@ -34,6 +34,7 @@ public class Room {
     private ScheduledExecutorService timerService;
     private ScheduledFuture<?> timerTask;
     private volatile int timeLeft = 0;
+    private volatile String lastBroadcastedHint = "";
 
     private static final int ROUND_TIME_SECONDS = 60;
     private static final int ROUND_REST_SECONDS = 6;
@@ -69,11 +70,12 @@ public class Room {
             broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|" + client.getPlayer().getUsername() + " đã tham gia phòng.");
 
             // Nếu đang trong trận, gửi các nét vẽ hiện tại cho người mới vào xem
-            if (state == State.PLAYING) {
+            if (state == State.PLAYING && secretWord != null) {
                 for (Stroke stroke : currentStrokes) {
                     client.send(Protocol.SYNC_STROKE + "|" + stroke.toProtocolString());
                 }
-                client.send(Protocol.WORD_HINT + "|" + WordDictionary.generateHint(secretWord.getText()) + "|" + secretWord.getCategory());
+                int elapsed = Math.max(0, ROUND_TIME_SECONDS - timeLeft);
+                client.send(Protocol.WORD_HINT + "|" + WordDictionary.generateHint(secretWord.getText(), elapsed) + "|" + secretWord.getCategory());
                 client.send(Protocol.TIMER_TICK + "|" + timeLeft);
             }
         }
@@ -175,10 +177,10 @@ public class Room {
 
         // Gửi từ khóa cho người vẽ, gợi ý cho người đoán
         drawer.send(Protocol.SECRET_WORD + "|" + secretWord.getText() + "|" + secretWord.getCategory());
-        String hintPattern = WordDictionary.generateHint(secretWord.getText());
+        lastBroadcastedHint = WordDictionary.generateHint(secretWord.getText(), 0);
         for (ClientHandler ch : clients) {
             if (ch != drawer) {
-                ch.send(Protocol.WORD_HINT + "|" + hintPattern + "|" + secretWord.getCategory());
+                ch.send(Protocol.WORD_HINT + "|" + lastBroadcastedHint + "|" + secretWord.getCategory());
             }
         }
 
@@ -197,6 +199,17 @@ public class Room {
             try {
                 timeLeft--;
                 broadcast(Protocol.TIMER_TICK + "|" + timeLeft);
+
+                // Cập nhật gợi ý hiển thị dần đáp án mỗi khi qua 60 / length(đáp án) giây
+                if (secretWord != null && timeLeft > 0) {
+                    int elapsed = Math.max(0, ROUND_TIME_SECONDS - timeLeft);
+                    String currentHint = WordDictionary.generateHint(secretWord.getText(), elapsed);
+                    if (!currentHint.equals(lastBroadcastedHint)) {
+                        lastBroadcastedHint = currentHint;
+                        ClientHandler drawer = getDrawer();
+                        broadcastExcept(drawer, Protocol.WORD_HINT + "|" + currentHint + "|" + secretWord.getCategory());
+                    }
+                }
 
                 if (timeLeft <= 0) {
                     stopTimer();
