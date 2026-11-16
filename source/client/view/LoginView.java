@@ -1,14 +1,16 @@
 package client.view;
 
+import client.controller.LoginController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class LoginView extends JFrame {
+
     private final JTextField txtUsername = new JTextField();
-    // private final JTextField txtHost = new JTextField("127.0.0.1");
-    // private final JTextField txtPort = new JTextField("8888");
-    
+    private final JTextField txtHost = new JTextField("127.0.0.1");
+    private final JTextField txtPort = new JTextField("8888");
+
     private final JButton btnLogin = new JButton("Đăng nhập");
 
     public LoginView() {
@@ -35,7 +37,6 @@ public class LoginView extends JFrame {
         main.add(title);
         main.add(Box.createRigidArea(new Dimension(0, 20)));
 
- 
         JPanel userPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         userPanel.setBackground(new Color(245, 247, 250));
         userPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -43,7 +44,7 @@ public class LoginView extends JFrame {
         JLabel lblUser = new JLabel("Tên người chơi:");
         lblUser.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         lblUser.setPreferredSize(new Dimension(100, 25));
-        
+
         txtUsername.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         txtUsername.setPreferredSize(new Dimension(180, 30));
         txtUsername.setToolTipText("Nhập tên");
@@ -52,7 +53,6 @@ public class LoginView extends JFrame {
         userPanel.add(txtUsername);
         main.add(userPanel);
 
-        /* 
         main.add(Box.createRigidArea(new Dimension(0, 10)));
         JPanel hostPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         hostPanel.setBackground(new Color(245, 247, 250));
@@ -67,7 +67,7 @@ public class LoginView extends JFrame {
         main.add(hostPanel);
 
         main.add(Box.createRigidArea(new Dimension(0, 10)));
-        
+
         JPanel portPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         portPanel.setBackground(new Color(245, 247, 250));
         portPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -79,9 +79,8 @@ public class LoginView extends JFrame {
         portPanel.add(lblPort);
         portPanel.add(txtPort);
         main.add(portPanel);
-        */
 
-        main.add(Box.createRigidArea(new Dimension(0, 25))); 
+        main.add(Box.createRigidArea(new Dimension(0, 25)));
 
         btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btnLogin.setBackground(new Color(39, 174, 96));
@@ -89,10 +88,10 @@ public class LoginView extends JFrame {
         btnLogin.setFocusPainted(false);
         btnLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+
         btnLogin.setMaximumSize(new Dimension(160, 38));
         btnLogin.setPreferredSize(new Dimension(160, 38));
-        
+
         main.add(btnLogin);
 
         add(main);
@@ -118,7 +117,16 @@ public class LoginView extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             LoginView lv = new LoginView();
+            new LoginController(lv);
             lv.setVisible(true);
         });
+    }
+
+    public String getHost() {
+        return txtHost.getText().trim();
+    }
+
+    public String getPort() {
+        return txtPort.getText().trim();
     }
 }
