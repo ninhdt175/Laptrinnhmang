@@ -1,5 +1,6 @@
 package client.view;
 
+import client.controller.GameRoomController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -95,7 +96,10 @@ public class GameRoomView extends JFrame {
     public PaintCanvas getPaintCanvas() {
         return paintCanvas;
     }
-
+    private String getCurrentUsername() {
+        return client.network.ClientSocketManager.getInstance().getCurrentUsername();
+    }
+    
     public void setStartButtonVisible(boolean visible) {
         btnStartGame.setVisible(visible);
     }
@@ -159,9 +163,9 @@ public class GameRoomView extends JFrame {
         addWindowListener(listener);
     }
 
-    public void setGameState(boolean b) {
-        paintCanvas.setDrawable(b);
-        toolPanel.setToolsEnabled(b);
+    public void setGameState(boolean isDrawer) {
+        paintCanvas.setDrawable(isDrawer);
+        toolPanel.setToolsEnabled(isDrawer);
     }
 
     public void showSecretWord(String word, String category) {
@@ -176,7 +180,8 @@ public class GameRoomView extends JFrame {
 
     public void showRoundStart(int round, String drawer) {
         lblWordHint.setText("Vòng " + round + " – Người vẽ: " + drawer);
-        setGameState(false);
+        boolean b = drawer.equalsIgnoreCase(getCurrentUsername());
+        setGameState(b);
         setTimer(60);
     }
 
