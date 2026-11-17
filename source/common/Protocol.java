@@ -30,6 +30,7 @@ public class Protocol {
     public static final String TIMER_TICK = "TIMER_TICK";         // S -> C: TIMER_TICK|secondsRemaining
     public static final String ROUND_END = "ROUND_END";           // S -> C: ROUND_END|secretWord|leaderboardData
     public static final String GAME_OVER = "GAME_OVER";           // S -> C: GAME_OVER|winnerUsername|finalScores
+    public static final String TIME_UP = "TIME_UP";                 // S -> C: TIME_UP  
 
     // 4. Đồng bộ Bảng vẽ (Drawing)
     public static final String DRAW_STROKE = "DRAW_STROKE";       // C (Drawer) -> S: DRAW_STROKE|x1,y1,x2,y2,colorHex,size

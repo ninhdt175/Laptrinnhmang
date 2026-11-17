@@ -48,18 +48,37 @@ public class Room {
         host.setRoom(this);
     }
 
-    public String getId() { return id; }
-    public State getState() { return state; }
-    public ClientHandler getHost() { return host; }
-    public List<ClientHandler> getClients() { return clients; }
-    public int getPlayerCount() { return clients.size(); }
-    public boolean isFull() { return clients.size() >= MAX_PLAYERS; }
+    public String getId() {
+        return id;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public ClientHandler getHost() {
+        return host;
+    }
+
+    public List<ClientHandler> getClients() {
+        return clients;
+    }
+
+    public int getPlayerCount() {
+        return clients.size();
+    }
+
+    public boolean isFull() {
+        return clients.size() >= MAX_PLAYERS;
+    }
 
     /**
      * Thêm người chơi vào phòng
      */
     public synchronized boolean addClient(ClientHandler client) {
-        if (isFull()) return false;
+        if (isFull()) {
+            return false;
+        }
         if (!clients.contains(client)) {
             clients.add(client);
             client.getPlayer().setHost(false);
@@ -213,12 +232,21 @@ public class Room {
 
                 if (timeLeft <= 0) {
                     stopTimer();
-                    endRound();
+                    handleTimeUp();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }, 1, 1, TimeUnit.SECONDS);
+    }
+
+    private synchronized void handleTimeUp() {
+        if (state != State.PLAYING) {
+            return;
+        }
+        // Phát âm thanh hết giờ.
+        broadcast(Protocol.TIME_UP);
+        endRound();
     }
 
     private synchronized void stopTimer() {
@@ -236,7 +264,9 @@ public class Room {
      * Kết thúc vòng chơi
      */
     public synchronized void endRound() {
-        if (state != State.PLAYING) return;
+        if (state != State.PLAYING) {
+            return;
+        }
         state = State.ROUND_END;
         stopTimer();
 
@@ -284,8 +314,12 @@ public class Room {
      * Xử lý nét vẽ từ Drawer
      */
     public void handleDrawStroke(ClientHandler sender, Stroke stroke) {
-        if (state != State.PLAYING) return;
-        if (!sender.getPlayer().isDrawer()) return;
+        if (state != State.PLAYING) {
+            return;
+        }
+        if (!sender.getPlayer().isDrawer()) {
+            return;
+        }
 
         currentStrokes.add(stroke);
         String msg = Protocol.SYNC_STROKE + "|" + stroke.toProtocolString();
@@ -300,8 +334,12 @@ public class Room {
      * Xử lý xóa toàn bộ bảng vẽ
      */
     public void handleClearCanvas(ClientHandler sender) {
-        if (state != State.PLAYING) return;
-        if (!sender.getPlayer().isDrawer()) return;
+        if (state != State.PLAYING) {
+            return;
+        }
+        if (!sender.getPlayer().isDrawer()) {
+            return;
+        }
 
         currentStrokes.clear();
         broadcast(Protocol.CLEAR_CANVAS);
@@ -311,7 +349,9 @@ public class Room {
      * Xử lý tin nhắn chat và đoán chữ
      */
     public synchronized void handleChatMessage(ClientHandler sender, String content) {
-        if (content == null || content.trim().isEmpty()) return;
+        if (content == null || content.trim().isEmpty()) {
+            return;
+        }
         String text = content.trim();
 
         // Nếu đang trong trận đấu
@@ -348,7 +388,7 @@ public class Room {
                 }
 
                 broadcast(Protocol.CORRECT_GUESS + "|" + sender.getPlayer().getUsername() + "|" + pointsAwarded);
-                broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|" + sender.getPlayer().getUsername() + " đã đoán chính xác từ khóa! (+" + pointsAwarded + "đ)");
+                //broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|" + sender.getPlayer().getUsername() + " đã đoán chính xác từ khóa! (+" + pointsAwarded + "đ)");
 
                 checkAllGuessed();
                 return;
@@ -385,7 +425,9 @@ public class Room {
 
     public ClientHandler getDrawer() {
         for (ClientHandler ch : clients) {
-            if (ch.getPlayer().isDrawer()) return ch;
+            if (ch.getPlayer().isDrawer()) {
+                return ch;
+            }
         }
         return null;
     }
@@ -397,7 +439,9 @@ public class Room {
         StringBuilder sbPlayers = new StringBuilder();
         for (int i = 0; i < clients.size(); i++) {
             sbPlayers.append(clients.get(i).getPlayer().getUsername());
-            if (i < clients.size() - 1) sbPlayers.append(",");
+            if (i < clients.size() - 1) {
+                sbPlayers.append(",");
+            }
         }
         String hostName = host != null ? host.getPlayer().getUsername() : "";
         String msg = Protocol.ROOM_UPDATE + "|" + id + "|" + sbPlayers.toString() + "|" + hostName;
@@ -415,7 +459,9 @@ public class Room {
         for (int i = 0; i < sorted.size(); i++) {
             Player p = sorted.get(i).getPlayer();
             sb.append(p.getUsername()).append(":").append(p.getScore());
-            if (i < sorted.size() - 1) sb.append(",");
+            if (i < sorted.size() - 1) {
+                sb.append(",");
+            }
         }
         return sb.toString();
     }
