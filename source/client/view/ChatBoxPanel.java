@@ -56,14 +56,6 @@ public class ChatBoxPanel extends JPanel {
         txtInput.setText("");
     }
 
-    public void appendNormalMessage(String sender, String message) {
-        appendMessage(sender, message, Color.BLACK);
-    }
-
-    public void appendCorrectMessage(String sender, String message) {
-        appendMessage(sender, message, new Color(39, 174, 96));
-    }
-
     public void appendMessage(String sender, String message, Color color) {
         try {
             Style style = txtChat.addStyle("ChatStyle", null);

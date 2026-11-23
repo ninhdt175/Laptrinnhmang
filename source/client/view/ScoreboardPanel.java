@@ -7,9 +7,12 @@ import javax.swing.border.TitledBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScoreboardPanel extends JPanel {
     private static final Color BORDER = new Color(203, 213, 225);
+    private String currentHost = "";
 
     private final DefaultTableModel scoreModel =new DefaultTableModel(
                     new String[]{"Người chơi", "Điểm"}, 0
@@ -83,8 +86,27 @@ public class ScoreboardPanel extends JPanel {
             if (colon > 0) {
                 String name = entry.substring(0, colon).trim();
                 String score = entry.substring(colon + 1).trim();
-                scoreModel.addRow(new Object[]{name, score});
+                String display = (currentHost != null && name.equalsIgnoreCase(currentHost)) ? name + " (Chủ phòng)" : name;
+                scoreModel.addRow(new Object[]{display, score});
             }
+        }
+    }
+
+    public void updatePlayers(String players, String hostName) {
+        this.currentHost = hostName;
+        if (players == null || players.isBlank()) return;
+        Map<String, String> currentScores = new HashMap<>();
+        for (int i = 0; i < scoreModel.getRowCount(); i++) {
+            String raw = String.valueOf(scoreModel.getValueAt(i, 0)).replace(" (Chủ phòng)", "").trim();
+            currentScores.put(raw.toLowerCase(), String.valueOf(scoreModel.getValueAt(i, 1)));
+        }
+        scoreModel.setRowCount(0);
+        for (String p : players.split(",")) {
+            String name = p.trim();
+            if (name.isEmpty()) continue;
+            String score = currentScores.getOrDefault(name.toLowerCase(), "0");
+            String display = (hostName != null && name.equalsIgnoreCase(hostName)) ? name + " (Chủ phòng)" : name;
+            scoreModel.addRow(new Object[]{display, score});
         }
     }
     public void clearLeaderboard() {

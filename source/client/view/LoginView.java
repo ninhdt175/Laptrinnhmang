@@ -86,6 +86,8 @@ public class LoginView extends JFrame {
         btnLogin.setBackground(new Color(39, 174, 96));
         btnLogin.setForeground(Color.WHITE);
         btnLogin.setFocusPainted(false);
+        btnLogin.setBorderPainted(false);
+        btnLogin.setOpaque(true);
         btnLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnLogin.setCursor(new Cursor(Cursor.HAND_CURSOR));
 

@@ -5,6 +5,7 @@ import client.network.*;
 import client.view.*;
 import common.Protocol;
 
+import java.awt.Color;
 import javax.swing.SwingUtilities;
 
 public class GameRoomController implements ServerListener {
@@ -113,23 +114,24 @@ public class GameRoomController implements ServerListener {
 
             case Protocol.CHAT_MESSAGE:
                 if (params.length >= 2) {
-                    view.appendNormal(params[0], params[1]);
+                    Color color = Color.BLACK;
+                    if (params.length >= 3 && params[2].startsWith("#")) {
+                        try {
+                            color = Color.decode(params[2]);
+                        } catch (NumberFormatException ignored) {}
+                    }
+                    view.appendChat(params[0], params[1], color);
                 }
                 break;
 
             case Protocol.CORRECT_GUESS:
-                if (params.length >= 2) {
-                    SoundEffect.playCorrectSound();
-                    view.appendCorrect("HỆ THỐNG",
-                            params[0] + " đoán đúng (+" + params[1] + " điểm).");
-                }
+                SoundEffect.playCorrectSound();
                 break;
 
             case Protocol.ROUND_END:
                 if (params.length >= 2) {
                     view.updateScoreboard(params[1]);
                     view.showRoundEnd(params[0]);
-                    //view.appendNormal("HỆ THỐNG", "Kết thúc vòng. Từ khóa: " + params[0]);
                 }
                 break;
             case Protocol.TIME_UP:
@@ -140,7 +142,6 @@ public class GameRoomController implements ServerListener {
                 if (params.length >= 2) {
                     view.updateScoreboard(params[1]);
                     view.setGameOverState();
-                    //view.showMessage("Trận đấu kết thúc! Người chiến thắng: " + params[0]);
                 }
                 break;
 

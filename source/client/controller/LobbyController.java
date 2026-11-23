@@ -19,6 +19,7 @@ public class LobbyController implements ServerListener {
         view.addRefreshListener(e -> refreshRooms());
         view.addCreateRoomListener(e -> createRoom());
         view.addJoinRoomListener(e -> joinSelectedRoom());
+        view.setPlayerName(network.getCurrentUsername());
         network.addListener(this);
 
         refreshRooms();

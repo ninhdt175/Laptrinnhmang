@@ -86,7 +86,7 @@ public class Room {
             client.setRoom(this);
 
             broadcastRoomUpdate();
-            broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|" + client.getPlayer().getUsername() + " đã tham gia phòng.");
+            broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|" + client.getPlayer().getUsername() + " đã tham gia phòng.|#2563EB");
 
             // Nếu đang trong trận, gửi các nét vẽ hiện tại cho người mới vào xem
             if (state == State.PLAYING && secretWord != null) {
@@ -107,7 +107,7 @@ public class Room {
     public synchronized void removeClient(ClientHandler client) {
         if (clients.remove(client)) {
             client.setRoom(null);
-            broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|" + client.getPlayer().getUsername() + " đã rời phòng.");
+            broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|" + client.getPlayer().getUsername() + " đã rời phòng.|#DC2626");
 
             if (clients.isEmpty()) {
                 stopTimer();
@@ -118,12 +118,12 @@ public class Room {
             if (client == host) {
                 host = clients.get(0);
                 host.getPlayer().setHost(true);
-                broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|" + host.getPlayer().getUsername() + " đã trở thành chủ phòng mới.");
+                broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|" + host.getPlayer().getUsername() + " đã trở thành chủ phòng mới.|#D97706");
             }
 
             // Nếu người vẽ rời phòng khi đang chơi -> kết thúc sớm vòng hiện tại
             if (state == State.PLAYING && client.getPlayer().isDrawer()) {
-                broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Người vẽ đã thoát game! Chuyển sang vòng tiếp theo...");
+                broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Người vẽ đã thoát game! Chuyển sang vòng tiếp theo...|#DC2626");
                 endRound();
             } else if (state == State.PLAYING) {
                 // Kiểm tra xem tất cả người đoán còn lại đã đoán xong chưa
@@ -139,11 +139,11 @@ public class Room {
      */
     public synchronized boolean startGame(ClientHandler requester) {
         if (requester != host) {
-            requester.send(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Chỉ chủ phòng mới có quyền bắt đầu trận đấu!");
+            requester.send(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Chỉ chủ phòng mới có quyền bắt đầu trận đấu!|#DC2626");
             return false;
         }
         if (clients.size() < 2) {
-            requester.send(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Cần tối thiểu 2 người chơi để bắt đầu!");
+            requester.send(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Cần tối thiểu 2 người chơi để bắt đầu!|#DC2626");
             return false;
         }
         if (state == State.PLAYING) {
@@ -159,7 +159,7 @@ public class Room {
         drawerIndex = -1;
         totalRounds = Math.max(3, clients.size()); // Mỗi người được vẽ ít nhất 1 lần
 
-        broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Trận đấu bắt đầu! Tổng số vòng: " + totalRounds);
+        broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Trận đấu bắt đầu! Tổng số vòng: " + totalRounds + "|#16A34A");
         startNextRound();
         return true;
     }
@@ -274,7 +274,7 @@ public class Room {
         String leaderboard = getLeaderboardString();
 
         broadcast(Protocol.ROUND_END + "|" + wordAnswer + "|" + leaderboard);
-        broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Vòng " + currentRound + " kết thúc! Từ khóa là: " + wordAnswer);
+        broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Vòng " + currentRound + " kết thúc! Từ khóa là: " + wordAnswer + "|#D97706");
 
         // Nghỉ vài giây trước khi sang vòng mới
         timerService = Executors.newSingleThreadScheduledExecutor();
@@ -304,7 +304,7 @@ public class Room {
         String finalScores = getLeaderboardString();
 
         broadcast(Protocol.GAME_OVER + "|" + winnerName + "|" + finalScores);
-        broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Trận đấu đã kết thúc! Người chiến thắng là: " + winnerName + " (" + maxScore + " điểm)");
+        broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Trận đấu đã kết thúc! Người chiến thắng là: " + winnerName + " (" + maxScore + " điểm)|#7C3AED");
 
         state = State.WAITING;
         broadcastRoomUpdate();
@@ -360,7 +360,7 @@ public class Room {
             if (sender.getPlayer().isDrawer()) {
                 // Kiểm tra xem người vẽ có cố tình gõ từ khóa lộ liễu không
                 if (secretWord != null && WordDictionary.checkMatch(text, secretWord.getText())) {
-                    sender.send(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Bạn là người vẽ, không được phép tiết lộ từ khóa!");
+                    sender.send(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Bạn là người vẽ, không được phép tiết lộ từ khóa!|#DC2626");
                     return;
                 }
                 broadcast(Protocol.CHAT_MESSAGE + "|" + sender.getPlayer().getUsername() + " (Người vẽ)|" + text);
@@ -369,7 +369,7 @@ public class Room {
 
             // 2. Nếu người đoán đã đoán đúng trước đó trong vòng này
             if (sender.getPlayer().hasGuessedCorrectly()) {
-                sender.send(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Bạn đã đoán đúng từ khóa vòng này rồi! Vui lòng giữ bí mật.");
+                sender.send(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Bạn đã đoán đúng từ khóa vòng này rồi! Vui lòng giữ bí mật.|#D97706");
                 return;
             }
 
@@ -388,7 +388,7 @@ public class Room {
                 }
 
                 broadcast(Protocol.CORRECT_GUESS + "|" + sender.getPlayer().getUsername() + "|" + pointsAwarded);
-                //broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|" + sender.getPlayer().getUsername() + " đã đoán chính xác từ khóa! (+" + pointsAwarded + "đ)");
+                broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|" + sender.getPlayer().getUsername() + " đã đoán chính xác từ khóa! (+" + pointsAwarded + "đ)|#16A34A");
 
                 checkAllGuessed();
                 return;
@@ -418,7 +418,7 @@ public class Room {
 
         // Nếu tất cả người đoán đã đoán xong -> kết thúc vòng sớm
         if (guesserCount > 0 && allGuessed) {
-            broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Tất cả người chơi đều đã đoán đúng từ khóa!");
+            broadcast(Protocol.CHAT_MESSAGE + "|HỆ THỐNG|Tất cả người chơi đều đã đoán đúng từ khóa!|#16A34A");
             endRound();
         }
     }

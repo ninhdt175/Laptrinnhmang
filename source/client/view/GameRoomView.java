@@ -114,11 +114,13 @@ public class GameRoomView extends JFrame {
     }
 
     public void setRoomLabel(String roomId) {
-        lblRoom.setText("Mã phòng: " + roomId);
+        String username = getCurrentUsername();
+        lblRoom.setText("Mã phòng: " + roomId + (username != null && !username.isEmpty() ? " | Người chơi: " + username : ""));
     }
 
     public void updateRoom(String roomId, String players, String hostName) {
         setRoomLabel(roomId);
+        scorePanel.updatePlayers(players, hostName);
         btnStartGame.setVisible(hostName.equalsIgnoreCase(
                 client.network.ClientSocketManager.getInstance().getCurrentUsername()));
     }
@@ -141,7 +143,7 @@ public class GameRoomView extends JFrame {
     }
 
     public void appendChat(String sender, String message, Color c) {
-        chatPanel.appendMessage(sender, message, Color.BLACK);
+        chatPanel.appendMessage(sender, message, c != null ? c : Color.BLACK);
     }
 
     public String getChatMessage() {
@@ -150,14 +152,6 @@ public class GameRoomView extends JFrame {
 
     public void clearChatInput() {
         chatPanel.clearInput();
-    }
-
-    public void appendCorrect(String sender, String message) {
-        chatPanel.appendCorrectMessage(sender, message);
-    }
-
-    public void appendNormal(String sender, String message) {
-        chatPanel.appendNormalMessage(sender, message);
     }
 
     public void showMessage(String message) {

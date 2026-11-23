@@ -8,6 +8,7 @@ import java.util.*;
 public class LobbyView extends JFrame {
     private DefaultTableModel tableModel;
     private JTable tblRoom;
+    private final JLabel lblCurrentUser = new JLabel("", SwingConstants.RIGHT);
     private final JButton btnRefresh = new JButton("Làm mới");
     private final JButton btnCreateRoom = new JButton("Tạo phòng");
     private final JButton btnJoinRoom = new JButton("Tham gia");
@@ -23,11 +24,25 @@ public class LobbyView extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
+        JPanel topPanel = new JPanel(new BorderLayout(10, 4));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 16, 6, 16));
+
         JLabel title = new JLabel("DANH SÁCH PHÒNG", SwingConstants.CENTER);
         title.setFont(new Font("Segoe UI", Font.BOLD, 20));
         title.setForeground(new Color(41, 128, 185));
-        title.setBorder(BorderFactory.createEmptyBorder(14, 10, 8, 10));
-        add(title, BorderLayout.NORTH);
+
+        lblCurrentUser.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblCurrentUser.setForeground(new Color(30, 41, 59));
+        updateCurrentUserLabel();
+
+        JLabel dummyLeft = new JLabel("");
+        dummyLeft.setPreferredSize(new Dimension(180, 20));
+        lblCurrentUser.setPreferredSize(new Dimension(180, 20));
+
+        topPanel.add(dummyLeft, BorderLayout.WEST);
+        topPanel.add(title, BorderLayout.CENTER);
+        topPanel.add(lblCurrentUser, BorderLayout.EAST);
+        add(topPanel, BorderLayout.NORTH);
 
         tableModel = new DefaultTableModel(
             new String[]{"Mã phòng", "Số người", "Trạng thái"}, 0) {
@@ -49,6 +64,7 @@ public class LobbyView extends JFrame {
         styleButton(btnRefresh,  new Color(100, 116, 139));
         styleButton(btnCreateRoom,  new Color(22, 163, 74));
         styleButton(btnJoinRoom, new Color(37, 99, 235));
+        
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         bottom.add(btnRefresh);
         bottom.add(btnCreateRoom);
@@ -94,6 +110,21 @@ public class LobbyView extends JFrame {
 
     public void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void updateCurrentUserLabel() {
+        String username = client.network.ClientSocketManager.getInstance().getCurrentUsername();
+        setPlayerName(username);
+    }
+
+    public void setPlayerName(String username) {
+        if (username != null && !username.isEmpty()) {
+            setTitle("Sảnh chờ - Người chơi: " + username);
+            lblCurrentUser.setText("Người chơi: " + username);
+        } else {
+            setTitle("Sảnh chờ");
+            lblCurrentUser.setText("Người chơi: Khách");
+        }
     }
     private void styleButton(JButton button, Color color) {
         button.setFont(new Font("Segoe UI", Font.BOLD, 13));
