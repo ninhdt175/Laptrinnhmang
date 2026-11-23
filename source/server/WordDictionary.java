@@ -81,15 +81,15 @@ public class WordDictionary {
     }
 
     /**
-     * Tạo gợi ý gạch dưới ban đầu cho người đoán (ví dụ: "CON MÈO" -> "_ _ _   _ _ _")
+     * Tạo gợi ý gạch dưới ban đầu cho người đoán
      */
     public static String generateHint(String word) {
         return generateHint(word, 0);
     }
 
     /**
-     * Tạo gợi ý hiển thị dần đáp án mỗi khi qua 60 / length(đáp án) giây cho đến hết thời gian (60s).
-     * Cứ sau mỗi mốc 60 / length(đáp án) giây, mở thêm 1 ký tự theo thứ tự từ trái qua phải.
+     * Tạo gợi ý hiển thị dần đáp án 
+     * Cứ sau mỗi mốc thời gian, mở thêm 1 ký tự theo thứ tự từ trái qua phải.
      */
     public static String generateHint(String word, int elapsedSeconds) {
         if (word == null || word.isEmpty()) return "";
