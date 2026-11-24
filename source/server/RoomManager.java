@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Quản lý danh sách các phòng chơi (Lobby) tập trung trên Server.
+ * Quản lý danh sách các phòng chơi tập trung trên Server.
  */
 public class RoomManager {
 
