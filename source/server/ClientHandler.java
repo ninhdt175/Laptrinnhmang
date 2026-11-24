@@ -10,7 +10,7 @@ import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Xử lý kết nối TCP riêng biệt cho từng Client (chạy trên một luồng riêng).
+ * Xử lý kết nối TCP riêng biệt cho từng Client.
  */
 public class ClientHandler implements Runnable {
 
@@ -120,6 +120,11 @@ public class ClientHandler implements Runnable {
         }
 
         String username = parts[1].trim();
+        if (parts.length > 2 || username.contains(",") || username.contains(":")) {
+            send(Protocol.LOGIN_FAILED + "|Tên người chơi không được chứa các ký tự |, , hoặc :!");
+            return;
+        }
+
         if (username.length() < 2 || username.length() > 20) {
             send(Protocol.LOGIN_FAILED + "|Tên người chơi phải từ 2 đến 20 ký tự!");
             return;

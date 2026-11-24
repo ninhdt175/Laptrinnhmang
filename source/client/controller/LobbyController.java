@@ -19,6 +19,7 @@ public class LobbyController implements ServerListener {
         view.addRefreshListener(e -> refreshRooms());
         view.addCreateRoomListener(e -> createRoom());
         view.addJoinRoomListener(e -> joinSelectedRoom());
+        view.addLogoutListener(e -> handleLogout());
         view.setPlayerName(network.getCurrentUsername());
         network.addListener(this);
 
@@ -59,6 +60,17 @@ public class LobbyController implements ServerListener {
             view.setBusy(false);
             view.showError("Không gửi được yêu cầu tham gia phòng.");
         }
+    }
+
+    private void handleLogout() {
+        network.removeListener(this);
+        network.closeConnection();
+        network.setCurrentUsername(null);
+        view.dispose();
+
+        LoginView loginView = new LoginView();
+        new LoginController(loginView);
+        loginView.setVisible(true);
     }
 
     private List<String[]> parseRoomList(String raw) {

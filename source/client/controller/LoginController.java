@@ -17,21 +17,7 @@ public class LoginController implements ServerListener {
     }
 
     private void handleLogin() {
-        String username = view.getUsername();
-
-        if (username.isEmpty()) {
-            view.showError("Vui lòng nhập tên người chơi.");
-            return;
-        }
-        if (username.length() < 2 || username.length() > 20) {
-            view.showError("Tên người chơi phải từ 2 đến 20 ký tự");
-            return;
-        }
-        if (username.contains("|") || username.contains(",") || username.contains(":")
-                || username.contains("\n") || username.contains("\r")) {
-            view.showError("Tên người chơi không được chứa các ký tự | , : hoặc xuống dòng.");
-            return;
-        }
+        String username = view.getUsername().trim();
 
         final String host = view.getHost();
         final int port;

@@ -12,6 +12,7 @@ public class LobbyView extends JFrame {
     private final JButton btnRefresh = new JButton("Làm mới");
     private final JButton btnCreateRoom = new JButton("Tạo phòng");
     private final JButton btnJoinRoom = new JButton("Tham gia");
+    private final JButton btnLogout = new JButton("Đăng xuất");
 
     public LobbyView() {
         initComponents();
@@ -61,14 +62,21 @@ public class LobbyView extends JFrame {
         tblRoom.getTableHeader().setReorderingAllowed(false);
         add(new JScrollPane(tblRoom), BorderLayout.CENTER);
 
+        styleButton(btnLogout, new Color(220, 38, 38));
         styleButton(btnRefresh,  new Color(100, 116, 139));
         styleButton(btnCreateRoom,  new Color(22, 163, 74));
         styleButton(btnJoinRoom, new Color(37, 99, 235));
         
-        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        bottom.add(btnRefresh);
-        bottom.add(btnCreateRoom);
-        bottom.add(btnJoinRoom);
+        JPanel bottom = new JPanel(new BorderLayout(10, 10));
+        bottom.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        bottom.add(btnLogout, BorderLayout.WEST);
+
+        JPanel rightButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        rightButtons.add(btnRefresh);
+        rightButtons.add(btnCreateRoom);
+        rightButtons.add(btnJoinRoom);
+        bottom.add(rightButtons, BorderLayout.EAST);
+
         add(bottom, BorderLayout.SOUTH);
     }
 
@@ -82,6 +90,10 @@ public class LobbyView extends JFrame {
 
     public void addJoinRoomListener(ActionListener listener) {
         btnJoinRoom.addActionListener(listener);
+    }
+
+    public void addLogoutListener(ActionListener listener) {
+        btnLogout.addActionListener(listener);
     }
 
     public String getSelectedRoomId() {
@@ -99,6 +111,7 @@ public class LobbyView extends JFrame {
     }
 
     public void setBusy(boolean busy) {
+        btnLogout.setEnabled(!busy);
         btnRefresh.setEnabled(!busy);
         btnCreateRoom.setEnabled(!busy);
         btnJoinRoom.setEnabled(!busy);

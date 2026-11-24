@@ -115,7 +115,6 @@ public class WordDictionary {
 
     /**
      * Kiểm tra từ đoán có khớp với từ khóa bí mật hay không.
-     * Hỗ trợ so sánh linh hoạt: khớp có dấu hoặc khớp không dấu.
      */
     public static boolean checkMatch(String guess, String secret) {
         if (guess == null || secret == null) return false;
